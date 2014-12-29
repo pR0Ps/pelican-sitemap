@@ -53,6 +53,7 @@ def format_date(date):
         tz = "-00:00"
     return date.strftime("%Y-%m-%dT%H:%M:%S") + tz
 
+
 class SitemapGenerator(object):
 
     def __init__(self, context, settings, path, theme, output_path, *null):
@@ -61,7 +62,6 @@ class SitemapGenerator(object):
         self.context = context
         self.now = datetime.now()
         self.siteurl = settings.get('SITEURL')
-
 
         self.default_timezone = settings.get('TIMEZONE', 'UTC')
         self.timezone = getattr(self, 'timezone', self.default_timezone)
@@ -160,7 +160,6 @@ class SitemapGenerator(object):
             pri = self.priorities['indexes']
             chfreq = self.changefreqs['indexes']
 
-
         if self.format == 'xml':
             fd.write(XML_URL.format(self.siteurl, page.url, lastmod, chfreq, pri))
         else:
@@ -191,9 +190,9 @@ class SitemapGenerator(object):
         path = os.path.join(self.output_path, 'sitemap.{0}'.format(self.format))
 
         pages = self.context['pages'] + self.context['articles'] \
-                + [ c for (c, a) in self.context['categories']] \
-                + [ t for (t, a) in self.context['tags']] \
-                + [ a for (a, b) in self.context['authors']]
+                + [c for (c, a) in self.context['categories']] \
+                + [t for (t, a) in self.context['tags']] \
+                + [a for (a, b) in self.context['authors']]
 
         self.set_url_wrappers_modification_date(self.context['categories'])
         self.set_url_wrappers_modification_date(self.context['tags'])
