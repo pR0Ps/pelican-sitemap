@@ -1,11 +1,10 @@
 Sitemap
 =======
 
-The sitemap plugin generates plain-text or XML sitemaps. You can use the
-`SITEMAP` variable in your settings file to configure the behavior of the
-plugin.
+This plugin generates plain-text or XML sitemaps. You can use the `SITEMAP`
+variable in your settings file to configure the behavior of the plugin.
 
-The `SITEMAP` variable must be a Python dictionary and can contain three keys:
+The `SITEMAP` variable must be a Python dictionary and can contain these keys:
 
 - `format`, which sets the output format of the plugin (`xml` or `txt`)
 - `priorities`, which is a dictionary with three keys:
@@ -24,6 +23,11 @@ The `SITEMAP` variable must be a Python dictionary and can contain three keys:
 
   Valid frequency values are `always`, `hourly`, `daily`, `weekly`, `monthly`,
   `yearly` and `never`.
+
+- `exclude`, which is a list of regular expressions
+
+  If a page matches any of these regular expressions, it will not be included in
+  the site map.
 
 If a key is missing or a value is incorrect, it will be replaced with the
 default value.
@@ -56,6 +60,7 @@ SITEMAP = {
         'articles': 'monthly',
         'indexes': 'daily',
         'pages': 'monthly'
-    }
+    },
+    'exclude': []
 }
 ```
