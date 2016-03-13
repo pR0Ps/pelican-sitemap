@@ -32,6 +32,7 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 """
 
+PLAIN_URL = "{0}/{1}\n"
 XML_URL = """
 <url>
 <loc>{0}/{1}</loc>
@@ -82,7 +83,7 @@ class SitemapGenerator(object):
             'pages': 0.5
         }
 
-        self.sitemapExclude = []
+        self.exclude = []
 
         config = settings.get('SITEMAP', {})
 
@@ -92,7 +93,7 @@ class SitemapGenerator(object):
             fmt = config.get('format')
             pris = config.get('priorities')
             chfreqs = config.get('changefreqs')
-            self.sitemapExclude = config.get('exclude', [])
+            self.exclude = [re.compile(x) for x in config.get('exclude', self.exclude)]
 
             if fmt not in ('xml', 'txt'):
                 warning("sitemap plugin: SITEMAP['format'] must be `txt' or `xml'")
@@ -167,16 +168,11 @@ class SitemapGenerator(object):
         pageurl = '' if page.url == 'index.html' else page.url
 
         #Exclude URLs from the sitemap:
-        if self.format == 'xml':
-            flag = False
-            for regstr in self.sitemapExclude:
-                if re.match(regstr, pageurl):
-                    flag = True
-                    break
-            if not flag:
+        if not any(x.match(pageurl) for x in self.exclude):
+            if self.format == 'xml':
                 fd.write(XML_URL.format(self.siteurl, pageurl, lastmod, chfreq, pri))
-        else:
-            fd.write(self.siteurl + '/' + pageurl + '\n')
+            else:
+                fd.write(PLAIN_URL.format(self.siteurl, pageurl))
 
     def get_date_modified(self, page, default):
         if hasattr(page, 'modified'):

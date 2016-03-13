@@ -29,6 +29,13 @@ The `SITEMAP` variable must be a Python dictionary and can contain these keys:
   If a page matches any of these regular expressions, it will not be included in
   the site map.
 
+  The regular expressions are matched from the start of the page URL and follow
+  all the normal Python regular expression rules.
+
+  For example, to exclude everything under `http://example.org/blog/tags/` that
+  ends with `.json`, the correct regular expression would be `"blog/tags/.*\.json"`
+
+
 If a key is missing or a value is incorrect, it will be replaced with the
 default value.
 
